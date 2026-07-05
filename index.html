@@ -108,9 +108,9 @@ const db=getFirestore(fbApp);
 const rConfig=doc(db,"bolao","config"),rGR=doc(db,"bolao","gameResults"),rKO=doc(db,"bolao","koResults");
 const rParts=collection(db,"participants"),rChoices=collection(db,"choices");
 
-// Usa Netlify Function como proxy servidor (evita bloqueio CORS da API)
-const API_ENDPOINT="https://api.football-data.org/v4/competitions/WC/matches";
+// Proxy CORS para contornar bloqueio da API no browser
 const API_KEY="bb08639c3a6f4cb9a18daa939c6eda90";
+const API_ENDPOINT="https://corsproxy.io/?https://api.football-data.org/v4/competitions/WC/matches";
 
 const DEFAULT_ADM_HASH=(()=>{let h=5381;for(const c of"copa2026")h=((h<<5)+h+c.charCodeAt(0))&0xffffffff;return(h>>>0).toString(36);})();
 const TOURN_LOCK="2026-06-28T16:00:00-03:00";
@@ -1035,7 +1035,7 @@ const nT=n=>TM[n]||n;
 async function fetchAPI(){
   setApi("spin","Buscando placares...");
   try{
-    const res=await fetch(API_ENDPOINT,{headers:{"X-Auth-Token":API_KEY}});
+    const res=await fetch(API_ENDPOINT,{headers:{"X-Auth-Token":API_KEY,"x-requested-with":"XMLHttpRequest"}});
     if(!res.ok){
       if(res.status===404)setApi("err","Copa 2026 ainda não na API");
       else setApi("err","API: erro "+res.status);
