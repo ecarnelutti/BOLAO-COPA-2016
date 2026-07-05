@@ -1085,5 +1085,14 @@ async function fetchAPI(){
     if(Object.keys(ku).length)saves.push(fbS(rKO,ku));
     await Promise.all(saves);
     const fin=(data.matches||[]).filter(m=>m.status==="FINISHED").length;
-    const live=(data.matches||[]).filter(m=>m.status==="IN_PLAY"||m.status==="PAUSED").length;
-    const now=new Date(),hh=now.getHours().toString().padStart(2,"0"),mm2=now.getMinutes().toString().p
+    const now=new Date(),hh=now.getHours().toString().padStart(2,"0"),mm2=now.getMinutes().toString().padStart(2,"0");
+    setApi("ok",`${fin} encerrado${live?" · "+live+" ao vivo":""} · ${hh}:${mm2}`);
+  }catch(e){setApi("err","Erro na API: "+e.message);}
+}
+
+setInterval(fetchAPI,120000);
+initFB();
+fetchAPI();
+</script>
+</body>
+</html>
